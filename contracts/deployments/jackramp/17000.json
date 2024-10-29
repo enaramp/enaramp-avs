@@ -1,0 +1,13 @@
+{
+  "lastUpdate": { "timestamp": "1730200416", "block_number": "2630851" },
+  "addresses": {
+    "proxyAdmin": "0x634e385329a75321660d644cad44feaa4b8f684e",
+    "jackRampServiceManager": "0x1da873790d70857c735db405b2be8835e813a781",
+    "jackRampServiceManagerImpl": "0x8efdecf01e8d32db58b8e89d387face184ac8e67",
+    "stakeRegistry": "0xceeaeea59ae9f35f3b523b5adda8df7a13c8e887",
+    "stakeRegistryImpl": "0xb93f290e6b2d5280241136e6ca6aed1cddec7886",
+    "strategy": "0x90fe4cf6bdcb6c8317460e3af33e9e97be4dc652",
+    "token": "0xc7f2cf4845c6db0e1a1e91ed41bcd0fcc1b0e141",
+    "underlyingUSD": "0x63f9aca3f3390551f402b96def4b73f4e86e0619"
+  }
+}

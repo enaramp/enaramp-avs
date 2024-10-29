@@ -12,9 +12,12 @@ interface IJackRampServiceManager {
 
     event Mint(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
-    event RequestOfframp(bytes32 indexed requestOfframpId, NewOfframpRequest params);
+    event RequestOfframp(bytes32 requestOfframpId, NewOfframpRequest params);
     event FillOfframp(
-        bytes32 indexed requestOfframpId, address receiver, bytes32 proof, bytes32 reclaimProof
+        bytes32 requestOfframpId,
+        address receiver,
+        bytes32 proof,
+        bytes32 reclaimProof
     );
     event NewOfframpRequestCreated(uint32 indexed taskIndex, Task task);
     event NewTaskCreated(uint32 indexed taskIndex, Task task);
@@ -56,9 +59,7 @@ interface IJackRampServiceManager {
     }
 
     function latestTaskNum() external view returns (uint32);
-    function allTaskHashes(
-        uint32 taskIndex
-    ) external view returns (bytes32);
+    function allTaskHashes(uint32 taskIndex) external view returns (bytes32);
     function allTaskResponses(
         address operator,
         uint32 taskIndex

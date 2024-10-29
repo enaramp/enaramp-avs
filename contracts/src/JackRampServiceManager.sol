@@ -1,21 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import {ECDSAServiceManagerBase} from
-    "@eigenlayer-middleware/src/unaudited/ECDSAServiceManagerBase.sol";
+import {ECDSAServiceManagerBase} from "@eigenlayer-middleware/src/unaudited/ECDSAServiceManagerBase.sol";
 import {ECDSAStakeRegistry} from "@eigenlayer-middleware/src/unaudited/ECDSAStakeRegistry.sol";
 import {IServiceManager} from "@eigenlayer-middleware/src/interfaces/IServiceManager.sol";
-import {ECDSAUpgradeable} from
-    "@openzeppelin-upgrades/contracts/utils/cryptography/ECDSAUpgradeable.sol";
-import {IERC1271Upgradeable} from
-    "@openzeppelin-upgrades/contracts/interfaces/IERC1271Upgradeable.sol";
+import {ECDSAUpgradeable} from "@openzeppelin-upgrades/contracts/utils/cryptography/ECDSAUpgradeable.sol";
+import {IERC1271Upgradeable} from "@openzeppelin-upgrades/contracts/interfaces/IERC1271Upgradeable.sol";
 import {IJackRampServiceManager} from "./IJackRampServiceManager.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin-upgrades/contracts/utils/ContextUpgradeable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@eigenlayer/contracts/interfaces/IRewardsCoordinator.sol";
-import {TransparentUpgradeableProxy} from
-    "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -24,7 +20,11 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 /**
  * @title Primary entrypoint for procuring services from JackRamp.
  */
-contract JackRampServiceManager is ECDSAServiceManagerBase, ERC20, IJackRampServiceManager {
+contract JackRampServiceManager is
+    ECDSAServiceManagerBase,
+    ERC20,
+    IJackRampServiceManager
+{
     using SafeERC20 for IERC20;
     using ECDSAUpgradeable for bytes32;
 
@@ -49,31 +49,34 @@ contract JackRampServiceManager is ECDSAServiceManagerBase, ERC20, IJackRampServ
         address _delegationManager,
         address _underlyingUSD
     )
-        ECDSAServiceManagerBase(_avsDirectory, _stakeRegistry, _rewardsCoordinator, _delegationManager)
+        ECDSAServiceManagerBase(
+            _avsDirectory,
+            _stakeRegistry,
+            _rewardsCoordinator,
+            _delegationManager
+        )
         ERC20("jackUSD", "jackUSD")
     {
         underlyingUSD = _underlyingUSD;
     }
 
-    function mint(
-        uint256 amount
-    ) public {
+    function mint(uint256 amount) public {
         _mint(msg.sender, amount);
-        IERC20(underlyingUSD).safeTransferFrom(msg.sender, address(this), amount);
+        IERC20(underlyingUSD).safeTransferFrom(
+            msg.sender,
+            address(this),
+            amount
+        );
         emit Mint(msg.sender, amount);
     }
 
-    function withdraw(
-        uint256 amount
-    ) public {
+    function withdraw(uint256 amount) public {
         _burn(msg.sender, amount);
         IERC20(underlyingUSD).safeTransfer(msg.sender, amount);
         emit Withdraw(msg.sender, amount);
     }
 
-    function requestOfframp(
-        OfframpRequestParams memory params
-    ) public {
+    function requestOfframp(OfframpRequestParams memory params) public {
         if (params.amount == 0) revert OfframpRequestAmountIsZero();
         if (params.amountRealWorld == 0) revert OfframpRequestAmountIsZero();
         if (params.channelAccount == bytes32("")) {
@@ -121,7 +124,9 @@ contract JackRampServiceManager is ECDSAServiceManagerBase, ERC20, IJackRampServ
         string memory channelId,
         string memory transactionId
     ) public returns (Task memory newTask) {
-        OfframpRequestStorage storage request = offrampRequests[requestOfframpId];
+        OfframpRequestStorage storage request = offrampRequests[
+            requestOfframpId
+        ];
 
         if (request.user == address(0)) revert OfframpRequestDoesNotExist();
         if (request.isCompleted) revert OfframpRequestAlreadyCompleted();
@@ -154,16 +159,15 @@ contract JackRampServiceManager is ECDSAServiceManagerBase, ERC20, IJackRampServ
         );
 
         // The message that was signed
-        bytes32 messageHash = keccak256(abi.encode(task));
+        bytes32 messageHash = keccak256(abi.encodePacked(referenceTaskIndex));
         bytes32 ethSignedMessageHash = messageHash.toEthSignedMessageHash();
         bytes4 magicValue = IERC1271Upgradeable.isValidSignature.selector;
         if (
-            !(
-                magicValue
-                    == ECDSAStakeRegistry(stakeRegistry).isValidSignature(
-                        ethSignedMessageHash, signature
-                    )
-            )
+            !(magicValue ==
+                ECDSAStakeRegistry(stakeRegistry).isValidSignature(
+                    ethSignedMessageHash,
+                    signature
+                ))
         ) {
             revert();
         }
@@ -171,7 +175,9 @@ contract JackRampServiceManager is ECDSAServiceManagerBase, ERC20, IJackRampServ
         // updating the storage with task responses
         allTaskResponses[msg.sender][referenceTaskIndex] = signature;
 
-        OfframpRequestStorage storage request = offrampRequests[task.requestOfframpId];
+        OfframpRequestStorage storage request = offrampRequests[
+            task.requestOfframpId
+        ];
 
         if (request.user == address(0)) revert OfframpRequestDoesNotExist();
         if (request.isCompleted) revert OfframpRequestAlreadyCompleted();
