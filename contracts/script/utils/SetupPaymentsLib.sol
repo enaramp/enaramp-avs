@@ -6,8 +6,7 @@ import {IStrategy} from "eigenlayer-contracts/src/contracts/interfaces/IStrategy
 import {Vm} from "forge-std/Vm.sol";
 
 library SetupPaymentsLib {
-    Vm internal constant vm =
-        Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
+    Vm internal constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     struct PaymentLeaves {
         bytes32[] leaves;
@@ -22,30 +21,24 @@ library SetupPaymentsLib {
         uint32 duration,
         uint32 startTimestamp
     ) internal {
-        IRewardsCoordinator.RewardsSubmission[]
-            memory rewardsSubmissions = new IRewardsCoordinator.RewardsSubmission[](
-                numPayments
-            );
+        IRewardsCoordinator.RewardsSubmission[] memory rewardsSubmissions =
+            new IRewardsCoordinator.RewardsSubmission[](numPayments);
         for (uint256 i = 0; i < numPayments; i++) {
-            IRewardsCoordinator.StrategyAndMultiplier[]
-                memory strategiesAndMultipliers = new IRewardsCoordinator.StrategyAndMultiplier[](
-                    1
-                );
-            strategiesAndMultipliers[0] = IRewardsCoordinator
-                .StrategyAndMultiplier({
-                    strategy: IStrategy(strategy),
-                    multiplier: 10000
-                });
+            IRewardsCoordinator.StrategyAndMultiplier[] memory strategiesAndMultipliers =
+                new IRewardsCoordinator.StrategyAndMultiplier[](1);
+            strategiesAndMultipliers[0] = IRewardsCoordinator.StrategyAndMultiplier({
+                strategy: IStrategy(strategy),
+                multiplier: 10_000
+            });
 
-            IRewardsCoordinator.RewardsSubmission
-                memory rewardsSubmission = IRewardsCoordinator
-                    .RewardsSubmission({
-                        strategiesAndMultipliers: strategiesAndMultipliers,
-                        token: IStrategy(strategy).underlyingToken(),
-                        amount: amountPerPayment,
-                        startTimestamp: startTimestamp,
-                        duration: duration
-                    });
+            IRewardsCoordinator.RewardsSubmission memory rewardsSubmission = IRewardsCoordinator
+                .RewardsSubmission({
+                strategiesAndMultipliers: strategiesAndMultipliers,
+                token: IStrategy(strategy).underlyingToken(),
+                amount: amountPerPayment,
+                startTimestamp: startTimestamp,
+                duration: duration
+            });
 
             rewardsSubmissions[i] = rewardsSubmission;
         }
@@ -64,35 +57,26 @@ library SetupPaymentsLib {
     ) internal {
         PaymentLeaves memory paymentLeaves = parseLeavesFromJson(filePath);
 
-        bytes memory proof = generateMerkleProof(
-            paymentLeaves.leaves,
-            indexToProve
-        );
-        bytes memory tokenProof = generateMerkleProof(
-            paymentLeaves.tokenLeaves,
-            0
-        );
+        bytes memory proof = generateMerkleProof(paymentLeaves.leaves, indexToProve);
+        bytes memory tokenProof = generateMerkleProof(paymentLeaves.tokenLeaves, 0);
 
         uint32[] memory tokenIndices = new uint32[](NUM_TOKEN_EARNINGS);
         bytes[] memory tokenProofs = new bytes[](NUM_TOKEN_EARNINGS);
         tokenProofs[0] = tokenProof;
 
-        IRewardsCoordinator.TokenTreeMerkleLeaf[]
-            memory tokenLeaves = new IRewardsCoordinator.TokenTreeMerkleLeaf[](
-                NUM_TOKEN_EARNINGS
-            );
+        IRewardsCoordinator.TokenTreeMerkleLeaf[] memory tokenLeaves =
+            new IRewardsCoordinator.TokenTreeMerkleLeaf[](NUM_TOKEN_EARNINGS);
         tokenLeaves[0] = defaultTokenLeaf(100, strategy);
 
-        IRewardsCoordinator.RewardsMerkleClaim
-            memory claim = IRewardsCoordinator.RewardsMerkleClaim({
-                rootIndex: 0,
-                earnerIndex: uint32(indexToProve),
-                earnerTreeProof: proof,
-                earnerLeaf: earnerLeaf,
-                tokenIndices: tokenIndices,
-                tokenTreeProofs: tokenProofs,
-                tokenLeaves: tokenLeaves
-            });
+        IRewardsCoordinator.RewardsMerkleClaim memory claim = IRewardsCoordinator.RewardsMerkleClaim({
+            rootIndex: 0,
+            earnerIndex: uint32(indexToProve),
+            earnerTreeProof: proof,
+            earnerLeaf: earnerLeaf,
+            tokenIndices: tokenIndices,
+            tokenTreeProofs: tokenProofs,
+            tokenLeaves: tokenLeaves
+        });
 
         rewardsCoordinator.processClaim(claim, recipient);
     }
@@ -116,10 +100,7 @@ library SetupPaymentsLib {
             strategy,
             filePath
         );
-        rewardsCoordinator.submitRoot(
-            paymentRoot,
-            rewardsCalculationEndTimestamp
-        );
+        rewardsCoordinator.submitRoot(paymentRoot, rewardsCalculationEndTimestamp);
     }
 
     function createPaymentRoot(
@@ -132,8 +113,7 @@ library SetupPaymentsLib {
         string memory filePath
     ) internal returns (bytes32) {
         require(
-            earnerLeaves.length == NUM_PAYMENTS,
-            "Number of earners must match number of payments"
+            earnerLeaves.length == NUM_PAYMENTS, "Number of earners must match number of payments"
         );
         bytes32[] memory leaves = new bytes32[](NUM_PAYMENTS);
 
@@ -142,9 +122,7 @@ library SetupPaymentsLib {
             "Number of token leaves must match number of token earnings"
         );
         for (uint256 i = 0; i < NUM_PAYMENTS; i++) {
-            leaves[i] = rewardsCoordinator.calculateEarnerLeafHash(
-                earnerLeaves[i]
-            );
+            leaves[i] = rewardsCoordinator.calculateEarnerLeafHash(earnerLeaves[i]);
         }
 
         writeLeavesToJson(leaves, tokenLeaves, filePath);
@@ -155,10 +133,8 @@ library SetupPaymentsLib {
         address[] calldata earners,
         bytes32[] memory tokenLeaves
     ) public returns (IRewardsCoordinator.EarnerTreeMerkleLeaf[] memory) {
-        IRewardsCoordinator.EarnerTreeMerkleLeaf[]
-            memory leaves = new IRewardsCoordinator.EarnerTreeMerkleLeaf[](
-                earners.length
-            );
+        IRewardsCoordinator.EarnerTreeMerkleLeaf[] memory leaves =
+            new IRewardsCoordinator.EarnerTreeMerkleLeaf[](earners.length);
         for (uint256 i = 0; i < earners.length; i++) {
             leaves[i] = IRewardsCoordinator.EarnerTreeMerkleLeaf({
                 earner: earners[i],
@@ -182,8 +158,8 @@ library SetupPaymentsLib {
     ) internal returns (bytes32[] memory) {
         bytes32[] memory leaves = new bytes32[](NUM_TOKEN_EARNINGS);
         for (uint256 i = 0; i < NUM_TOKEN_EARNINGS; i++) {
-            IRewardsCoordinator.TokenTreeMerkleLeaf
-                memory leaf = defaultTokenLeaf(TOKEN_EARNINGS, strategy);
+            IRewardsCoordinator.TokenTreeMerkleLeaf memory leaf =
+                defaultTokenLeaf(TOKEN_EARNINGS, strategy);
             leaves[i] = rewardsCoordinator.calculateTokenLeafHash(leaf);
         }
         return leaves;
@@ -193,11 +169,11 @@ library SetupPaymentsLib {
         uint256 TOKEN_EARNINGS,
         address strategy
     ) internal view returns (IRewardsCoordinator.TokenTreeMerkleLeaf memory) {
-        IRewardsCoordinator.TokenTreeMerkleLeaf
-            memory leaf = IRewardsCoordinator.TokenTreeMerkleLeaf({
-                token: IStrategy(strategy).underlyingToken(),
-                cumulativeEarnings: TOKEN_EARNINGS
-            });
+        IRewardsCoordinator.TokenTreeMerkleLeaf memory leaf = IRewardsCoordinator
+            .TokenTreeMerkleLeaf({
+            token: IStrategy(strategy).underlyingToken(),
+            cumulativeEarnings: TOKEN_EARNINGS
+        });
         return leaf;
     }
 
@@ -208,11 +184,7 @@ library SetupPaymentsLib {
     ) internal {
         string memory parent_object = "parent_object";
         vm.serializeBytes32(parent_object, "leaves", leaves);
-        string memory finalJson = vm.serializeBytes32(
-            parent_object,
-            "tokenLeaves",
-            tokenLeaves
-        );
+        string memory finalJson = vm.serializeBytes32(parent_object, "tokenLeaves", tokenLeaves);
         vm.writeJson(finalJson, filePath);
     }
 
@@ -253,9 +225,7 @@ library SetupPaymentsLib {
 
             for (uint256 j = 0; j < levelSize; j++) {
                 if (2 * j + 1 < n) {
-                    leaves[j] = keccak256(
-                        abi.encodePacked(leaves[2 * j], leaves[2 * j + 1])
-                    );
+                    leaves[j] = keccak256(abi.encodePacked(leaves[2 * j], leaves[2 * j + 1]));
                 } else {
                     leaves[j] = leaves[2 * j];
                 }
@@ -294,9 +264,7 @@ library SetupPaymentsLib {
         bytes32[] memory layer = new bytes32[](numNodesInLayer);
         //fill the layer with the pairwise hashes of the leaves
         for (uint256 i = 0; i < numNodesInLayer; i++) {
-            layer[i] = keccak256(
-                abi.encodePacked(leaves[2 * i], leaves[2 * i + 1])
-            );
+            layer[i] = keccak256(abi.encodePacked(leaves[2 * i], leaves[2 * i + 1]));
         }
         //the next layer above has half as many nodes
         numNodesInLayer /= 2;
@@ -304,9 +272,7 @@ library SetupPaymentsLib {
         while (numNodesInLayer != 0) {
             //overwrite the first numNodesInLayer nodes in layer with the pairwise hashes of their children
             for (uint256 i = 0; i < numNodesInLayer; i++) {
-                layer[i] = keccak256(
-                    abi.encodePacked(layer[2 * i], layer[2 * i + 1])
-                );
+                layer[i] = keccak256(abi.encodePacked(layer[2 * i], layer[2 * i + 1]));
             }
             //the next layer above has half as many nodes
             numNodesInLayer /= 2;

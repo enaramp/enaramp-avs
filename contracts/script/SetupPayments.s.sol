@@ -32,45 +32,30 @@ contract SetupPayments is Script {
         deployer = vm.rememberKey(vm.envUint("PRIVATE_KEY"));
         vm.label(deployer, "Deployer");
 
-        coreDeployment = CoreDeploymentLib.readDeploymentJson(
-            "deployments/core/",
-            block.chainid
-        );
-        jackRampDeployment = JackRampDeploymentLib.readDeploymentJson(
-            "deployments/hello-world/",
-            block.chainid
-        );
+        coreDeployment = CoreDeploymentLib.readDeploymentJson("deployments/core/", block.chainid);
+        jackRampDeployment =
+            JackRampDeploymentLib.readDeploymentJson("deployments/hello-world/", block.chainid);
 
         // TODO: Get the filePath from config
     }
 
     function run() external {
         vm.startBroadcast(deployer);
-        IRewardsCoordinator(coreDeployment.rewardsCoordinator)
-            .setRewardsUpdater(deployer);
-        PaymentInfo memory info = abi.decode(
-            vm.parseJson(vm.readFile(filePath)),
-            (PaymentInfo)
-        );
+        IRewardsCoordinator(coreDeployment.rewardsCoordinator).setRewardsUpdater(deployer);
+        PaymentInfo memory info = abi.decode(vm.parseJson(vm.readFile(filePath)), (PaymentInfo));
 
         createAVSRewardsSubmissions(
-            info.numPayments,
-            info.amountPerPayment,
-            info.duration,
-            info.startTimestamp
+            info.numPayments, info.amountPerPayment, info.duration, info.startTimestamp
         );
         submitPaymentRoot(
-            info.earners,
-            info.endTimestamp,
-            uint32(info.numPayments),
-            uint32(info.amountPerPayment)
+            info.earners, info.endTimestamp, uint32(info.numPayments), uint32(info.amountPerPayment)
         );
 
-        IRewardsCoordinator.EarnerTreeMerkleLeaf
-            memory earnerLeaf = IRewardsCoordinator.EarnerTreeMerkleLeaf({
-                earner: info.earners[info.indexToProve],
-                earnerTokenRoot: info.earnerTokenRoots[info.indexToProve]
-            });
+        IRewardsCoordinator.EarnerTreeMerkleLeaf memory earnerLeaf = IRewardsCoordinator
+            .EarnerTreeMerkleLeaf({
+            earner: info.earners[info.indexToProve],
+            earnerTokenRoot: info.earnerTokenRoots[info.indexToProve]
+        });
 
         processClaim(filePath, info.indexToProve, info.recipient, earnerLeaf);
 
@@ -122,11 +107,8 @@ contract SetupPayments is Script {
             amountPerPayment,
             jackRampDeployment.strategy
         );
-        IRewardsCoordinator.EarnerTreeMerkleLeaf[]
-            memory earnerLeaves = SetupPaymentsLib.createEarnerLeaves(
-                earners,
-                tokenLeaves
-            );
+        IRewardsCoordinator.EarnerTreeMerkleLeaf[] memory earnerLeaves =
+            SetupPaymentsLib.createEarnerLeaves(earners, tokenLeaves);
 
         SetupPaymentsLib.submitRoot(
             IRewardsCoordinator(coreDeployment.rewardsCoordinator),
