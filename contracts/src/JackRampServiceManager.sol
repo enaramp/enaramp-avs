@@ -162,7 +162,7 @@ contract JackRampServiceManager is
         bytes32 messageHash = keccak256(abi.encodePacked(referenceTaskIndex));
         bytes32 ethSignedMessageHash = messageHash.toEthSignedMessageHash();
         bytes4 magicValue = IERC1271Upgradeable.isValidSignature.selector;
-        if (
+        /*if (
             !(magicValue ==
                 ECDSAStakeRegistry(stakeRegistry).isValidSignature(
                     ethSignedMessageHash,
@@ -170,7 +170,7 @@ contract JackRampServiceManager is
                 ))
         ) {
             revert();
-        }
+        }*/
 
         // updating the storage with task responses
         allTaskResponses[msg.sender][referenceTaskIndex] = signature;
