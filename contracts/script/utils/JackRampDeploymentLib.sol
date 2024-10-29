@@ -33,7 +33,8 @@ library JackRampDeploymentLib {
     function deployContracts(
         address proxyAdmin,
         CoreDeploymentLib.DeploymentData memory core,
-        Quorum memory quorum
+        Quorum memory quorum,
+        address underlyingUSD
     ) internal returns (DeploymentData memory) {
         DeploymentData memory result;
 
@@ -51,7 +52,8 @@ library JackRampDeploymentLib {
                 core.avsDirectory,
                 result.stakeRegistry,
                 core.rewardsCoordinator,
-                core.delegationManager
+                core.delegationManager,
+                underlyingUSD
             )
         );
         // Upgrade contracts

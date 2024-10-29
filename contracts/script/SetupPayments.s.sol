@@ -94,14 +94,14 @@ contract SetupPayments is Script {
     }
 
     function processClaim(
-        string memory filePath,
+        string memory _filePath,
         uint256 indexToProve,
         address recipient,
         IRewardsCoordinator.EarnerTreeMerkleLeaf memory earnerLeaf
     ) public {
         SetupPaymentsLib.processClaim(
             IRewardsCoordinator(coreDeployment.rewardsCoordinator),
-            filePath,
+            _filePath,
             indexToProve,
             recipient,
             earnerLeaf,

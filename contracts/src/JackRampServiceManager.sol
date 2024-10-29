@@ -8,13 +8,14 @@ import {ECDSAUpgradeable} from "@openzeppelin-upgrades/contracts/utils/cryptogra
 import {IERC1271Upgradeable} from "@openzeppelin-upgrades/contracts/interfaces/IERC1271Upgradeable.sol";
 import {IJackRampServiceManager} from "./IJackRampServiceManager.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin-upgrades/contracts/utils/ContextUpgradeable.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
 import "@eigenlayer/contracts/interfaces/IRewardsCoordinator.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import {ReentrancyGuardTransient} from "@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol";
 
 /**
  * @title Primary entrypoint for procuring services from JackRamp.
@@ -22,7 +23,6 @@ import {ReentrancyGuardTransient} from "@openzeppelin/contracts/utils/Reentrancy
 contract JackRampServiceManager is
     ECDSAServiceManagerBase,
     ERC20,
-    ReentrancyGuardTransient,
     IJackRampServiceManager
 {
     using SafeERC20 for IERC20;
@@ -60,7 +60,7 @@ contract JackRampServiceManager is
         underlyingUSD = _underlyingUSD;
     }
 
-    function mint(uint256 amount) public nonReentrant {
+    function mint(uint256 amount) public {
         _mint(msg.sender, amount);
         IERC20(underlyingUSD).safeTransferFrom(
             msg.sender,
@@ -70,15 +70,13 @@ contract JackRampServiceManager is
         emit Mint(msg.sender, amount);
     }
 
-    function withdraw(uint256 amount) public nonReentrant {
+    function withdraw(uint256 amount) public {
         _burn(msg.sender, amount);
         IERC20(underlyingUSD).safeTransfer(msg.sender, amount);
         emit Withdraw(msg.sender, amount);
     }
 
-    function requestOfframp(
-        OfframpRequestParams memory params
-    ) public nonReentrant {
+    function requestOfframp(OfframpRequestParams memory params) public {
         if (params.amount == 0) revert OfframpRequestAmountIsZero();
         if (params.amountRealWorld == 0) revert OfframpRequestAmountIsZero();
         if (params.channelAccount == bytes32(""))
@@ -119,10 +117,10 @@ contract JackRampServiceManager is
     }
 
     function fillOfframp(
-        bytes32 memory requestOfframpId,
+        bytes32 requestOfframpId,
         string memory channelId,
         string memory transactionId
-    ) public nonReentrant {
+    ) public returns (Task memory newTask) {
         OfframpRequestStorage storage request = offrampRequests[
             requestOfframpId
         ];
@@ -130,7 +128,6 @@ contract JackRampServiceManager is
         if (request.user == address(0)) revert OfframpRequestDoesNotExist();
         if (request.isCompleted) revert OfframpRequestAlreadyCompleted();
 
-        Task memory newTask;
         newTask.channelId = channelId;
         newTask.transactionId = transactionId;
         newTask.requestOfframpId = requestOfframpId;
@@ -148,7 +145,7 @@ contract JackRampServiceManager is
         Task calldata task,
         uint32 referenceTaskIndex,
         bytes memory signature
-    ) public nonReentrant {
+    ) public {
         require(
             keccak256(abi.encode(task)) == allTaskHashes[referenceTaskIndex],
             "supplied task does not match the one recorded in the contract"
@@ -176,7 +173,7 @@ contract JackRampServiceManager is
         allTaskResponses[msg.sender][referenceTaskIndex] = signature;
 
         OfframpRequestStorage storage request = offrampRequests[
-            requestOfframpId
+            task.requestOfframpId
         ];
 
         if (request.user == address(0)) revert OfframpRequestDoesNotExist();
@@ -193,5 +190,23 @@ contract JackRampServiceManager is
 
     function decimals() public pure override returns (uint8) {
         return 6;
+    }
+
+    function _msgSender()
+        internal
+        view
+        override(Context, ContextUpgradeable)
+        returns (address sender)
+    {
+        sender = ContextUpgradeable._msgSender();
+    }
+
+    function _msgData()
+        internal
+        view
+        override(Context, ContextUpgradeable)
+        returns (bytes calldata)
+    {
+        return ContextUpgradeable._msgData();
     }
 }

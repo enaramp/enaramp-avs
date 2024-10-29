@@ -8,6 +8,7 @@ import {CoreDeploymentLib} from "./utils/CoreDeploymentLib.sol";
 import {UpgradeableProxyLib} from "./utils/UpgradeableProxyLib.sol";
 import {StrategyBase} from "@eigenlayer/contracts/strategies/StrategyBase.sol";
 import {ERC20Mock} from "../test/ERC20Mock.sol";
+import {M0Mock} from "../test/M0Mock.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.sol";
 import {StrategyManager} from "@eigenlayer/contracts/core/StrategyManager.sol";
@@ -25,6 +26,7 @@ contract JackRampDeployer is Script {
     JackRampDeploymentLib.DeploymentData jackRampDeployment;
     Quorum internal quorum;
     ERC20Mock token;
+    M0Mock underToken;
     function setUp() public virtual {
         deployer = vm.rememberKey(vm.envUint("PRIVATE_KEY"));
         vm.label(deployer, "Deployer");
@@ -33,7 +35,7 @@ contract JackRampDeployer is Script {
             "deployments/core/",
             block.chainid
         );
-
+        underToken = new M0Mock();
         token = new ERC20Mock();
         jackRampStrategy = IStrategy(
             StrategyFactory(coreDeployment.strategyFactory).deployNewStrategy(
@@ -49,11 +51,11 @@ contract JackRampDeployer is Script {
     function run() external {
         vm.startBroadcast(deployer);
         proxyAdmin = UpgradeableProxyLib.deployProxyAdmin();
-
         jackRampDeployment = JackRampDeploymentLib.deployContracts(
             proxyAdmin,
             coreDeployment,
-            quorum
+            quorum,
+            address(underToken)
         );
 
         jackRampDeployment.strategy = address(jackRampStrategy);
