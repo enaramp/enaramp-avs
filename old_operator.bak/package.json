@@ -1,0 +1,13 @@
+{
+	"dependencies": {
+		"@reclaimprotocol/zk-fetch": "^0.2.0",
+		"@types/node": "^22.8.2",
+		"dotenv": "^16.4.5",
+		"ethers": "^6.13.4",
+		"viem": "^2.21.36",
+		"wagmi": "^2.12.25"
+	},
+	"devDependencies": {
+		"@wagmi/cli": "^2.1.16"
+	}
+}

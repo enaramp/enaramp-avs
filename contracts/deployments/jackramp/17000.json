@@ -1,13 +1,1 @@
-{
-  "lastUpdate": { "timestamp": "1730200416", "block_number": "2630851" },
-  "addresses": {
-    "proxyAdmin": "0x634e385329a75321660d644cad44feaa4b8f684e",
-    "jackRampServiceManager": "0x1da873790d70857c735db405b2be8835e813a781",
-    "jackRampServiceManagerImpl": "0x8efdecf01e8d32db58b8e89d387face184ac8e67",
-    "stakeRegistry": "0xceeaeea59ae9f35f3b523b5adda8df7a13c8e887",
-    "stakeRegistryImpl": "0xb93f290e6b2d5280241136e6ca6aed1cddec7886",
-    "strategy": "0x90fe4cf6bdcb6c8317460e3af33e9e97be4dc652",
-    "token": "0xc7f2cf4845c6db0e1a1e91ed41bcd0fcc1b0e141",
-    "underlyingUSD": "0x63f9aca3f3390551f402b96def4b73f4e86e0619"
-  }
-}
+{"lastUpdate":{"timestamp":"1730273436","block_number":"2636390"},"addresses":{"proxyAdmin":"0x975cf28ca5f289ad69cc05af8ff26383f4b4d32f","jackRampServiceManager":"0xfb3970e6eb88815c485b3531a36d4c8b45db1135","jackRampServiceManagerImpl":"0x725d859ce8c44806994bdbb629fddd8fd8ddb3ee","stakeRegistry":"0xa60c4a6676805a5d31bf38867e675e0f6b6bfc63","stakeRegistryImpl":"0xd8013bd3593f7f88c7de43200e5693bc92e8d23d","strategy":"0xc08cd656849fe94a7135f239af0d7af88a9544c0","token":"0xc7f2cf4845c6db0e1a1e91ed41bcd0fcc1b0e141","underlyingUSD":"0xc3a60917ede5105adf2096b100af40ddb93b42aa"}}

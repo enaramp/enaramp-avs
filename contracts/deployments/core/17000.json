@@ -1,17 +1,1 @@
-{
-  "lastUpdate": { "timestamp": "1730200188", "block_number": "2630834" },
-  "addresses": {
-    "proxyAdmin": "0xc0ccdf641d81eba25936ce1d5f644fac7b1e156d",
-    "delegation": "0x67d2c20f8ef8e5843b4784cf02fa4b6d42d65c1b",
-    "delegationManagerImpl": "0xd5ec95f4a41213de0a8287408a77d38ba6bf0600",
-    "avsDirectory": "0xd0180d88bc4b9151bd695ef4cfb72157b39314c0",
-    "avsDirectoryImpl": "0x7c57c51db73c8c82daf4835516137d46b1d8813e",
-    "strategyManager": "0xe9f310a4ccfb3938715bc5f6c76b797e65843f3d",
-    "strategyManagerImpl": "0xa02d4947799092fc08f85a61389793e148e161db",
-    "eigenPodManager": "0xd12291689fb7ed69b3cdd0fd2637137a3b70a605",
-    "eigenPodManagerImpl": "0x0e6153cd37679cac1cfebfaae207640ad08065b4",
-    "strategyFactory": "0x25ac0e6cda04d941cdc246a8322a5cf61c322032",
-    "strategyFactoryImpl": "0xad5010fbb82d5b948824210eecbbd85db6e8e251",
-    "strategyBeacon": "0x77bc5ed8cbc51c1f4472d9b8f254394cfd00013c"
-  }
-}
+{"lastUpdate":{"timestamp":"1730273184","block_number":"2636370"},"addresses":{"proxyAdmin":"0xe5dbff5c696c061617df0c2be21450d5e86f21ae","delegation":"0x510f70de6b7436034647e665126961f483ffa9a2","delegationManagerImpl":"0xd82e66d5204988b44ddfc66f30996421d9dbad0c","avsDirectory":"0x7ff9c4f508386c298b5cab7abcd20e2ac2827663","avsDirectoryImpl":"0xc89139e8ae4843996460d454296afd45bedd7576","strategyManager":"0x3818ea59dfdad2b354819d0c60fd4090c063f1b3","strategyManagerImpl":"0x04ccfee3a38a0c256aa9c6a9eb26eb6f66602819","eigenPodManager":"0xef51397fed6eb69d8b5e69eacd0f60613f7d1e79","eigenPodManagerImpl":"0xb7feec5c42f2df865c561f03f53f1877f2ef9c3c","strategyFactory":"0x0c95de2cdfd44f83173e2736f3aef5026b8ab040","strategyFactoryImpl":"0x79f954de8d360a850744d12ed2fd9512458cea38","strategyBeacon":"0xfc7a86052451d0b3ad7b043c88ef2a0dd2945d07"}}

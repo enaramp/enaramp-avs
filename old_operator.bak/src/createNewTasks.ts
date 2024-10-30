@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from ".pnpm/ethers@6.13.4/node_modules/ethers/lib.commonjs";
 import * as dotenv from "dotenv";
 const fs = require('fs');
 const path = require('path');
@@ -9,13 +9,13 @@ const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
 const userwallet = new ethers.Wallet(process.env.USER_PRIVATE_KEY!, provider);
 /// TODO: Hack
-let chainId = 31337;
+let chainId = 17000;
 
-const avsDeploymentData = JSON.parse(fs.readFileSync(path.resolve(__dirname, `../contracts/deployments/jackramp/${chainId}.json`), 'utf8'));
+const avsDeploymentData = JSON.parse(fs.readFileSync(path.resolve(__dirname, `../../contracts/deployments/jackramp/${chainId}.json`), 'utf8'));
 const jackRampServiceManagerAddress = avsDeploymentData.addresses.jackRampServiceManager;
 const mockUSDAddress = avsDeploymentData.addresses.underlyingUSD;
 const jackRampServiceManagerABI = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../abis/JackRampServiceManager.json'), 'utf8'));
-const mockUSDABI = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../abis/MockUSD.json'), 'utf8'));
+const mockUSDABI = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../abis/MockUSD.json'), 'utf8'));
 // Initialize contract objects from ABIs
 const jackRampServiceManagerFromUser = new ethers.Contract(jackRampServiceManagerAddress, jackRampServiceManagerABI, userwallet);
 const jackRampServiceManager = new ethers.Contract(jackRampServiceManagerAddress, jackRampServiceManagerABI, wallet);

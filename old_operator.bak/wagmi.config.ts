@@ -12,6 +12,7 @@ export default defineConfig({
         "IAVSDirectory.json",
         "IDelegationManager.json",
         "ECDSAStakeRegistry.json",
+        "MockUSD.json",
       ],
     }),
   ],

@@ -802,7 +802,7 @@
       {
         "name": "requestOfframpId",
         "type": "bytes32",
-        "indexed": true,
+        "indexed": false,
         "internalType": "bytes32"
       },
       {
@@ -976,7 +976,7 @@
       {
         "name": "requestOfframpId",
         "type": "bytes32",
-        "indexed": true,
+        "indexed": false,
         "internalType": "bytes32"
       },
       {

@@ -1835,7 +1835,7 @@ export const jackRampServiceManagerAbi = [
         name: 'requestOfframpId',
         internalType: 'bytes32',
         type: 'bytes32',
-        indexed: true,
+        indexed: false,
       },
       {
         name: 'receiver',
@@ -1967,7 +1967,7 @@ export const jackRampServiceManagerAbi = [
         name: 'requestOfframpId',
         internalType: 'bytes32',
         type: 'bytes32',
-        indexed: true,
+        indexed: false,
       },
       {
         name: 'params',
