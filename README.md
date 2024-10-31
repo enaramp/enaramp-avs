@@ -3,11 +3,11 @@ This repository is divided into three sections: contracts, mockbank, and operato
 
 You can find the explanations through the following links:
 
-[Contracts](/contracts/README.md)
+Contracts: [README.md](/contracts/README.md)
 
-[Mockbank](/mockbank/README.md)
+Mockbank: [README.md](/mockbank/README.md)
 
-[Operator](/operator/README.md)
+Operator: [README.md](/operator/README.md)
 
 ## 📧 Documentation
 
