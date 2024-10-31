@@ -1,13 +1,13 @@
 ## JACKRAMP AVS Contracts
-This repository is divided into three sections: contracts, mockbank, and operator.
+This repository is divided into three sections: contracts, mockbank, and operator/AVS.
 
 You can find the explanations through the following links:
 
-Contracts: [README.md](/contracts/README.md)
+AVS contracts: [README.md](/contracts/README.md)
+
+Operator/AVS: [README.md](/operator/README.md)
 
 Mockbank: [README.md](/mockbank/README.md)
-
-Operator: [README.md](/operator/README.md)
 
 ## 📧 Documentation
 
