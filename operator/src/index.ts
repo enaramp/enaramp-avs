@@ -13,8 +13,8 @@ dotenv.config();
 log.setLevel(process.env.NODE_ENV === "development" ? "debug" : "info");
 
 const client = new ReclaimClient(
-  "0x0bDc0951C24f5D3e92DDdF98ff5399BeEB8391f6",
-  "0x62ced9f436119a32e9b1db561b99971969401f0ba3e0c3eedfad6262724b7d6a"
+  process.env.RECLAIM_APP_ID!,
+  process.env.RECLAIM_SECRET!
 );
 
 if (!Object.keys(process.env).length) {
