@@ -1,30 +1,13 @@
 ## JACKRAMP AVS Contracts
+This repository is divided into three sections: contracts, mockbank, and operator.
 
-## How to run
-Navigate to folder `contracts`
-```shell
-cd contracts
-```
+You can find the explanations through the following links:
 
+[Contracts](/contracts/README.md)
 
-### Build
+[Mockbank](/mockbank/README.md)
 
-```shell
-$ forge build
-```
-
-### Deploy Eigen
-
-```shell
-$ forge script script/DeployEigenLayerCore.s.sol --rpc-url <RPC_URL> --broadcast
-```
-
-### Deploy Jackramp
-
-```shell
-$ forge script script/JackRampDeployer.s.sol --rpc-url  <RPC_URL> --broadcast
-```
-
+[Operator](/operator/README.md)
 
 ## 📧 Documentation
 
