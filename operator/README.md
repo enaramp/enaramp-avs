@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Jackramp Operator** is an Active Verification System (AVS) designed for secure verification of data related to the `fillOfframp` function from a smart contract. The operator generates a zero-knowledge proof using zkTLS, signs the data, and submits it to the `completeOfframp` function within the smart contract, ensuring trustless data verification.
+**Jackramp Operator** is an Actively Validated Services (AVS) designed for secure verification of data related to the `fillOfframp` function from a smart contract. The operator generates a zero-knowledge proof using zkTLS, signs the data, and submits it to the `completeOfframp` function within the smart contract, ensuring trustless data verification.
 
 ## Commands
 
