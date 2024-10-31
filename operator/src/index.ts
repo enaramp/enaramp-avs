@@ -41,14 +41,14 @@ const avsDeploymentData = JSON.parse(
   fs.readFileSync(
     path.resolve(
       __dirname,
-      `../contracts/deployments/jackramp/${chainId}.json`
+      `../../contracts/deployments/jackramp/${chainId}.json`
     ),
     "utf8"
   )
 );
 const coreDeploymentData = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, `../contracts/deployments/core/${chainId}.json`),
+    path.resolve(__dirname, `../../contracts/deployments/core/${chainId}.json`),
     "utf8"
   )
 );
@@ -61,24 +61,24 @@ const ecdsaStakeRegistryAddress = avsDeploymentData.addresses.stakeRegistry;
 
 const delegationManagerABI = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, "../abis/IDelegationManager.json"),
+    path.resolve(__dirname, "../../abis/IDelegationManager.json"),
     "utf8"
   )
 );
 const ecdsaRegistryABI = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, "../abis/ECDSAStakeRegistry.json"),
+    path.resolve(__dirname, "../../abis/ECDSAStakeRegistry.json"),
     "utf8"
   )
 );
 const jackRampServiceManagerABI = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, "../abis/JackRampServiceManager.json"),
+    path.resolve(__dirname, "../../abis/JackRampServiceManager.json"),
     "utf8"
   )
 );
 const avsDirectoryABI = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, "../abis/IAVSDirectory.json"), "utf8")
+  fs.readFileSync(path.resolve(__dirname, "../../abis/IAVSDirectory.json"), "utf8")
 );
 
 const delegationManager = new ethers.Contract(

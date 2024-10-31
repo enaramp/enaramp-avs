@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "build": "tsc",
+    "start:operator": "npx ts-node src/index.ts",
+    "start:traffic": "npx ts-node src/createNewTasks.ts",
+    "extract:abis": "npx ts-node src/abis.ts"
+  },
   "dependencies": {
     "@reclaimprotocol/circom-symmetric-crypto": "^1.1.3",
     "@reclaimprotocol/js-sdk": "^2.1.1",

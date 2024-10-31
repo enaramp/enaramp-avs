@@ -41,7 +41,7 @@ const avsDeploymentData: DeploymentData = JSON.parse(
   fs.readFileSync(
     path.resolve(
       __dirname,
-      `../contracts/deployments/jackramp/${chainId}.json`
+      `../../contracts/deployments/jackramp/${chainId}.json`
     ),
     "utf8"
   )
@@ -53,12 +53,12 @@ const mockUSDAddress: string = avsDeploymentData.addresses.underlyingUSD;
 
 const jackRampServiceManagerABI = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, "../abis/JackRampServiceManager.json"),
+    path.resolve(__dirname, "../../abis/JackRampServiceManager.json"),
     "utf8"
   )
 );
 const mockUSDABI = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, "../abis/MockUSD.json"), "utf8")
+  fs.readFileSync(path.resolve(__dirname, "../../abis/MockUSD.json"), "utf8")
 );
 
 // Initialize contract objects
