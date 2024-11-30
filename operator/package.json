@@ -15,7 +15,8 @@
     "ethers": "^6.13.4",
     "figlet": "^1.8.0",
     "loglevel": "^1.9.2",
-    "ora": "^5.4.1"
+    "ora": "^5.4.1",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/figlet": "^1.7.0"
