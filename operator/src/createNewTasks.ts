@@ -18,12 +18,12 @@ const userWallet: Wallet = new ethers.Wallet(
   provider
 );
 
-const chainId: number = 17000; // TODO: Hack
+const chainId: number = 52085143; // TODO: Hack
 
 // Define interfaces
 interface DeploymentData {
   addresses: {
-    jackRampServiceManager: string;
+    enaRampServiceManager: string;
     underlyingUSD: string;
   };
 }
@@ -47,13 +47,13 @@ const avsDeploymentData: DeploymentData = JSON.parse(
   )
 );
 
-const jackRampServiceManagerAddress: string =
-  avsDeploymentData.addresses.jackRampServiceManager;
+const enaRampServiceManagerAddress: string =
+  avsDeploymentData.addresses.enaRampServiceManager;
 const mockUSDAddress: string = avsDeploymentData.addresses.underlyingUSD;
 
-const jackRampServiceManagerABI = JSON.parse(
+const enaRampServiceManagerABI = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, "../../abis/JackRampServiceManager.json"),
+    path.resolve(__dirname, "../../abis/EnaRampServiceManager.json"),
     "utf8"
   )
 );
@@ -62,14 +62,14 @@ const mockUSDABI = JSON.parse(
 );
 
 // Initialize contract objects
-const jackRampServiceManagerFromUser: Contract = new ethers.Contract(
-  jackRampServiceManagerAddress,
-  jackRampServiceManagerABI,
+const enaRampServiceManagerFromUser: Contract = new ethers.Contract(
+  enaRampServiceManagerAddress,
+  enaRampServiceManagerABI,
   userWallet
 );
-const jackRampServiceManager: Contract = new ethers.Contract(
-  jackRampServiceManagerAddress,
-  jackRampServiceManagerABI,
+const enaRampServiceManager: Contract = new ethers.Contract(
+  enaRampServiceManagerAddress,
+  enaRampServiceManagerABI,
   wallet
 );
 const mockUSD: Contract = new ethers.Contract(
@@ -82,7 +82,7 @@ let currentData: [bigint, string, string, string];
 
 // ASCII banner with figlet
 console.log(
-  chalk.green(figlet.textSync("Jackramp CLI", { horizontalLayout: "fitted" }))
+  chalk.green(figlet.textSync("Enaramp CLI", { horizontalLayout: "fitted" }))
 );
 
 // Helper function for hashing
@@ -140,50 +140,50 @@ async function createNewTask(
   console.log(chalk.magenta(`🏦 ChannelId: ${channelId}`));
   console.log(chalk.magenta(`📞 ChannelAccount: ${channelAccount}`));
 
-  const spinner = ora(chalk.cyan("Minting Mock USD...")).start();
+  const spinner = ora(chalk.cyan("Minting USDe...")).start();
 
   try {
     const txMint = await mockUSD.mint(userWallet.address, amount);
     const receiptMint = await txMint.wait();
     spinner.succeed(
-      chalk.green(`✅ Minted Mock USD! Tx Hash: ${receiptMint.hash}`)
+      chalk.green(`✅ Minted USDe! Tx Hash: ${receiptMint.hash}`)
     );
   } catch (error) {
     spinner.fail(
-      chalk.red("❌ Error minting Mock USD: " + (error as Error).message)
+      chalk.red("❌ Error minting USDe: " + (error as Error).message)
     );
     return;
   }
 
-  spinner.start(chalk.cyan("Approving Mock USD..."));
+  spinner.start(chalk.cyan("Approving USDe..."));
 
   try {
     const txApprove = await mockUSD.approve(
-      jackRampServiceManagerAddress,
+      enaRampServiceManagerAddress,
       amount
     );
     const receiptApprove = await txApprove.wait();
     spinner.succeed(
-      chalk.green(`✅ Approved Mock USD! Tx Hash: ${receiptApprove.hash}`)
+      chalk.green(`✅ Approved USDe! Tx Hash: ${receiptApprove.hash}`)
     );
   } catch (error) {
     spinner.fail(
-      chalk.red("❌ Error approving Mock USD: " + (error as Error).message)
+      chalk.red("❌ Error approving USDe: " + (error as Error).message)
     );
     return;
   }
 
-  spinner.start(chalk.cyan("Minting Jack USD..."));
+  spinner.start(chalk.cyan("Minting enaUSD..."));
 
   try {
-    const txMintJack = await jackRampServiceManagerFromUser.mint(amount);
-    const receiptMintJack = await txMintJack.wait();
+    const txMintEna = await enaRampServiceManagerFromUser.mint(amount);
+    const receiptMintEna = await txMintEna.wait();
     spinner.succeed(
-      chalk.green(`✅ Minted Jack USD! Tx Hash: ${receiptMintJack.hash}`)
+      chalk.green(`✅ Minted enaUSD! Tx Hash: ${receiptMintEna.hash}`)
     );
   } catch (error) {
     spinner.fail(
-      chalk.red("❌ Error minting Jack USD: " + (error as Error).message)
+      chalk.red("❌ Error minting enaUSD: " + (error as Error).message)
     );
     return;
   }
@@ -199,7 +199,7 @@ async function createNewTask(
       channelId: hashIt(channelId),
     };
 
-    const txOfframp = await jackRampServiceManagerFromUser.requestOfframp(
+    const txOfframp = await enaRampServiceManagerFromUser.requestOfframp(
       params
     );
     const receiptOfframp = await txOfframp.wait();
@@ -219,7 +219,7 @@ async function responseToRequest(requestOfframpId: string): Promise<void> {
   const spinner = ora(chalk.cyan("Filling Offramp...")).start();
 
   try {
-    const txFill = await jackRampServiceManager.fillOfframp(
+    const txFill = await enaRampServiceManager.fillOfframp(
       requestOfframpId,
       currentData[1],
       currentData[3]
@@ -239,7 +239,7 @@ async function responseToRequest(requestOfframpId: string): Promise<void> {
 async function monitorNewOfframp(): Promise<void> {
   console.log(chalk.yellow("👀 Monitoring for new offramp requests..."));
 
-  jackRampServiceManager.on(
+  enaRampServiceManager.on(
     "RequestOfframp",
     async (requestOfframpId: string, task: any) => {
       console.log(

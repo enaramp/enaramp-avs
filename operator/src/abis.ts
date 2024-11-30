@@ -9,7 +9,7 @@ const contractsToExtract = [
   "IAVSDirectory",
   "IDelegationManager",
   "ECDSAStakeRegistry",
-  "JackRampServiceManager",
+  "EnaRampServiceManager",
 ];
 
 if (!fs.existsSync(abiDir)) {

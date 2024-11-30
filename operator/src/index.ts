@@ -24,7 +24,7 @@ if (!Object.keys(process.env).length) {
 
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
-let chainId = 17000;
+let chainId = 52085143;
 
 console.log(
   chalk.green(
@@ -55,8 +55,8 @@ const coreDeploymentData = JSON.parse(
 
 const delegationManagerAddress = coreDeploymentData.addresses.delegation;
 const avsDirectoryAddress = coreDeploymentData.addresses.avsDirectory;
-const jackRampServiceManagerAddress =
-  avsDeploymentData.addresses.jackRampServiceManager;
+const enaRampServiceManagerAddress =
+  avsDeploymentData.addresses.enaRampServiceManager;
 const ecdsaStakeRegistryAddress = avsDeploymentData.addresses.stakeRegistry;
 
 const delegationManagerABI = JSON.parse(
@@ -71,9 +71,9 @@ const ecdsaRegistryABI = JSON.parse(
     "utf8"
   )
 );
-const jackRampServiceManagerABI = JSON.parse(
+const enaRampServiceManagerABI = JSON.parse(
   fs.readFileSync(
-    path.resolve(__dirname, "../../abis/JackRampServiceManager.json"),
+    path.resolve(__dirname, "../../abis/EnaRampServiceManager.json"),
     "utf8"
   )
 );
@@ -86,9 +86,9 @@ const delegationManager = new ethers.Contract(
   delegationManagerABI,
   wallet
 );
-const jackRampServiceManager = new ethers.Contract(
-  jackRampServiceManagerAddress,
-  jackRampServiceManagerABI,
+const enaRampServiceManager = new ethers.Contract(
+  enaRampServiceManagerAddress,
+  enaRampServiceManagerABI,
   wallet
 );
 const ecdsaRegistryContract = new ethers.Contract(
@@ -177,7 +177,7 @@ const signAndRespondToTask = async (
       };
 
       console.log(chalk.blue("🔄 Sending transaction to complete task..."));
-      const tx = await jackRampServiceManager.completeOfframp(
+      const tx = await enaRampServiceManager.completeOfframp(
         params,
         taskIndex,
         signedTask
@@ -218,7 +218,7 @@ const registerOperator = async () => {
     const operatorDigestHash =
       await avsDirectory.calculateOperatorAVSRegistrationDigestHash(
         wallet.address,
-        await jackRampServiceManager.getAddress(),
+        await enaRampServiceManager.getAddress(),
         salt,
         expiry
       );
@@ -244,7 +244,7 @@ const registerOperator = async () => {
 
 const monitorNewTasks = async () => {
   console.log(chalk.magenta("👀 Monitoring for new tasks..."));
-  jackRampServiceManager.on("NewTaskCreated", async (taskIndex, task) => {
+  enaRampServiceManager.on("NewTaskCreated", async (taskIndex, task) => {
     console.log(taskIndex, task);
 
     log.info(chalk.blueBright(`🔔 New Task detected: Task #${taskIndex}`));
