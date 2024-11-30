@@ -6,7 +6,7 @@ import {ECDSAStakeRegistry} from "@eigenlayer-middleware/src/unaudited/ECDSAStak
 import {IServiceManager} from "@eigenlayer-middleware/src/interfaces/IServiceManager.sol";
 import {ECDSAUpgradeable} from "@openzeppelin-upgrades/contracts/utils/cryptography/ECDSAUpgradeable.sol";
 import {IERC1271Upgradeable} from "@openzeppelin-upgrades/contracts/interfaces/IERC1271Upgradeable.sol";
-import {IJackRampServiceManager} from "./IJackRampServiceManager.sol";
+import {IEnaRampServiceManager} from "./IEnaRampServicemanager.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin-upgrades/contracts/utils/ContextUpgradeable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
@@ -18,12 +18,12 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 /**
- * @title Primary entrypoint for procuring services from JackRamp.
+ * @title Primary entrypoint for procuring services from EnaRamp.
  */
-contract JackRampServiceManager is
+contract EnaRampServiceManager is
     ECDSAServiceManagerBase,
     ERC20,
-    IJackRampServiceManager
+    IEnaRampServiceManager
 {
     using SafeERC20 for IERC20;
     using ECDSAUpgradeable for bytes32;
@@ -55,7 +55,7 @@ contract JackRampServiceManager is
             _rewardsCoordinator,
             _delegationManager
         )
-        ERC20("jackUSD", "jackUSD")
+        ERC20("enaUSD", "enaUSD")
     {
         underlyingUSD = _underlyingUSD;
     }

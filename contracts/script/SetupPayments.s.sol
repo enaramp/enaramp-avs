@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {Script} from "forge-std/Script.sol";
-import {JackRampDeploymentLib} from "./utils/JackRampDeploymentLib.sol";
+import {EnaRampDeploymentLib} from "./utils/EnaRampDeploymentLib.sol";
 import {CoreDeploymentLib} from "./utils/CoreDeploymentLib.sol";
 import {SetupPaymentsLib} from "./utils/SetupPaymentsLib.sol";
 import {IRewardsCoordinator} from "@eigenlayer/contracts/interfaces/IRewardsCoordinator.sol";
@@ -22,7 +22,7 @@ contract SetupPayments is Script {
 
     address private deployer;
     CoreDeploymentLib.DeploymentData coreDeployment;
-    JackRampDeploymentLib.DeploymentData jackRampDeployment;
+    EnaRampDeploymentLib.DeploymentData enaRampDeployment;
     string internal constant filePath = "test/mockData/scratch/payments.json";
 
     uint256 constant NUM_TOKEN_EARNINGS = 1;
@@ -33,8 +33,8 @@ contract SetupPayments is Script {
         vm.label(deployer, "Deployer");
 
         coreDeployment = CoreDeploymentLib.readDeploymentJson("deployments/core/", block.chainid);
-        jackRampDeployment =
-            JackRampDeploymentLib.readDeploymentJson("deployments/hello-world/", block.chainid);
+        enaRampDeployment =
+            EnaRampDeploymentLib.readDeploymentJson("deployments/hello-world/", block.chainid);
 
         // TODO: Get the filePath from config
     }
@@ -70,7 +70,7 @@ contract SetupPayments is Script {
     ) public {
         SetupPaymentsLib.createAVSRewardsSubmissions(
             IRewardsCoordinator(coreDeployment.rewardsCoordinator),
-            jackRampDeployment.strategy,
+            enaRampDeployment.strategy,
             numPayments,
             amountPerPayment,
             duration,
@@ -91,7 +91,7 @@ contract SetupPayments is Script {
             recipient,
             earnerLeaf,
             NUM_TOKEN_EARNINGS,
-            jackRampDeployment.strategy
+            enaRampDeployment.strategy
         );
     }
 
@@ -105,7 +105,7 @@ contract SetupPayments is Script {
             IRewardsCoordinator(coreDeployment.rewardsCoordinator),
             NUM_TOKEN_EARNINGS,
             amountPerPayment,
-            jackRampDeployment.strategy
+            enaRampDeployment.strategy
         );
         IRewardsCoordinator.EarnerTreeMerkleLeaf[] memory earnerLeaves =
             SetupPaymentsLib.createEarnerLeaves(earners, tokenLeaves);
@@ -114,7 +114,7 @@ contract SetupPayments is Script {
             IRewardsCoordinator(coreDeployment.rewardsCoordinator),
             tokenLeaves,
             earnerLeaves,
-            jackRampDeployment.strategy,
+            enaRampDeployment.strategy,
             endTimestamp,
             numPayments,
             NUM_TOKEN_EARNINGS,

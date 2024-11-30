@@ -8,14 +8,14 @@ import {console2} from "forge-std/Test.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {stdJson} from "forge-std/StdJson.sol";
 import {ECDSAStakeRegistry} from "@eigenlayer-middleware/src/unaudited/ECDSAStakeRegistry.sol";
-import {JackRampServiceManager} from "../../src/JackRampServiceManager.sol";
+import {EnaRampServiceManager} from "../../src/EnaRampServiceManager.sol";
 import {IDelegationManager} from "@eigenlayer/contracts/interfaces/IDelegationManager.sol";
 import {Quorum} from "@eigenlayer-middleware/src/interfaces/IECDSAStakeRegistryEventsAndErrors.sol";
 import {UpgradeableProxyLib} from "./UpgradeableProxyLib.sol";
 import {CoreDeploymentLib} from "./CoreDeploymentLib.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-library JackRampDeploymentLib {
+library EnaRampDeploymentLib {
     using stdJson for *;
     using Strings for *;
     using UpgradeableProxyLib for address;
@@ -24,7 +24,7 @@ library JackRampDeploymentLib {
         Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     struct DeploymentData {
-        address jackRampServiceManager;
+        address enaRampServiceManager;
         address stakeRegistry;
         address strategy;
         address token;
@@ -40,7 +40,7 @@ library JackRampDeploymentLib {
         DeploymentData memory result;
 
         // First, deploy upgradeable proxy contracts that will point to the implementations.
-        result.jackRampServiceManager = UpgradeableProxyLib.setUpEmptyProxy(
+        result.enaRampServiceManager = UpgradeableProxyLib.setUpEmptyProxy(
             proxyAdmin
         );
         result.stakeRegistry = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
@@ -48,8 +48,8 @@ library JackRampDeploymentLib {
         address stakeRegistryImpl = address(
             new ECDSAStakeRegistry(IDelegationManager(core.delegationManager))
         );
-        address jackRampServiceManagerImpl = address(
-            new JackRampServiceManager(
+        address enaRampServiceManagerImpl = address(
+            new EnaRampServiceManager(
                 core.avsDirectory,
                 result.stakeRegistry,
                 core.rewardsCoordinator,
@@ -60,7 +60,7 @@ library JackRampDeploymentLib {
         // Upgrade contracts
         bytes memory upgradeCall = abi.encodeCall(
             ECDSAStakeRegistry.initialize,
-            (result.jackRampServiceManager, 0, quorum)
+            (result.enaRampServiceManager, 0, quorum)
         );
         UpgradeableProxyLib.upgradeAndCall(
             result.stakeRegistry,
@@ -68,8 +68,8 @@ library JackRampDeploymentLib {
             upgradeCall
         );
         UpgradeableProxyLib.upgrade(
-            result.jackRampServiceManager,
-            jackRampServiceManagerImpl
+            result.enaRampServiceManager,
+            enaRampServiceManagerImpl
         );
 
         return result;
@@ -97,8 +97,8 @@ library JackRampDeploymentLib {
 
         DeploymentData memory data;
         /// TODO: 2 Step for reading deployment json.  Read to the core and the AVS data
-        data.jackRampServiceManager = json.readAddress(
-            ".contracts.jackRampServiceManager"
+        data.enaRampServiceManager = json.readAddress(
+            ".contracts.enaRampServiceManager"
         );
         data.stakeRegistry = json.readAddress(".contracts.stakeRegistry");
         data.strategy = json.readAddress(".contracts.strategy");
@@ -118,7 +118,7 @@ library JackRampDeploymentLib {
         DeploymentData memory data
     ) internal {
         address proxyAdmin = address(
-            UpgradeableProxyLib.getProxyAdmin(data.jackRampServiceManager)
+            UpgradeableProxyLib.getProxyAdmin(data.enaRampServiceManager)
         );
 
         string memory deploymentData = _generateDeploymentJson(
@@ -163,10 +163,10 @@ library JackRampDeploymentLib {
             string.concat(
                 '{"proxyAdmin":"',
                 proxyAdmin.toHexString(),
-                '","jackRampServiceManager":"',
-                data.jackRampServiceManager.toHexString(),
-                '","jackRampServiceManagerImpl":"',
-                data.jackRampServiceManager.getImplementation().toHexString(),
+                '","enaRampServiceManager":"',
+                data.enaRampServiceManager.toHexString(),
+                '","enaRampServiceManagerImpl":"',
+                data.enaRampServiceManager.getImplementation().toHexString(),
                 '","stakeRegistry":"',
                 data.stakeRegistry.toHexString(),
                 '","stakeRegistryImpl":"',
