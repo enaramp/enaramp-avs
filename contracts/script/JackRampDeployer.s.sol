@@ -50,18 +50,19 @@ contract JackRampDeployer is Script {
 
     function run() external {
         vm.startBroadcast(deployer);
-        underToken = new M0Mock();
+        //underToken = new M0Mock();
         proxyAdmin = UpgradeableProxyLib.deployProxyAdmin();
         jackRampDeployment = JackRampDeploymentLib.deployContracts(
             proxyAdmin,
             coreDeployment,
             quorum,
-            address(underToken)
+            "0x426E7d03f9803Dd11cb8616C65b99a3c0AfeA6dE" //address(underToken)
         );
 
         jackRampDeployment.strategy = address(jackRampStrategy);
         jackRampDeployment.token = address(token);
-        jackRampDeployment.underlyingUSD = address(underToken);
+        jackRampDeployment
+            .underlyingUSD = "0x426E7d03f9803Dd11cb8616C65b99a3c0AfeA6dE"; //address(underToken);
         vm.stopBroadcast();
 
         verifyDeployment();
