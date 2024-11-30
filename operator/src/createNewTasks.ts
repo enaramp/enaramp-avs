@@ -24,7 +24,8 @@ const chainId: number = 52085143; // TODO: Hack
 interface DeploymentData {
   addresses: {
     enaRampServiceManager: string;
-    underlyingUSD: string;
+    underlyingUSD: string; // Replace with USDe address if different
+    USDe: string; // Add USDe address here
   };
 }
 
@@ -49,7 +50,7 @@ const avsDeploymentData: DeploymentData = JSON.parse(
 
 const enaRampServiceManagerAddress: string =
   avsDeploymentData.addresses.enaRampServiceManager;
-const mockUSDAddress: string = avsDeploymentData.addresses.underlyingUSD;
+const USDeAddress: string = "0x426E7d03f9803Dd11cb8616C65b99a3c0AfeA6dE"; // USDe address
 
 const enaRampServiceManagerABI = JSON.parse(
   fs.readFileSync(
@@ -57,8 +58,8 @@ const enaRampServiceManagerABI = JSON.parse(
     "utf8"
   )
 );
-const mockUSDABI = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, "../../abis/MockUSD.json"), "utf8")
+const USDeABI = JSON.parse( // Replace ABI with USDe ABI
+  fs.readFileSync(path.resolve(__dirname, "../../abis/USDe.json"), "utf8")
 );
 
 // Initialize contract objects
@@ -72,9 +73,9 @@ const enaRampServiceManager: Contract = new ethers.Contract(
   enaRampServiceManagerABI,
   wallet
 );
-const mockUSD: Contract = new ethers.Contract(
-  mockUSDAddress,
-  mockUSDABI,
+const USDe: Contract = new ethers.Contract( // Initialize USDe contract
+  USDeAddress,
+  USDeABI,
   userWallet
 );
 
@@ -140,25 +141,24 @@ async function createNewTask(
   console.log(chalk.magenta(`🏦 ChannelId: ${channelId}`));
   console.log(chalk.magenta(`📞 ChannelAccount: ${channelAccount}`));
 
-  const spinner = ora(chalk.cyan("Minting USDe...")).start();
+  const spinner = ora(chalk.cyan("Starting App..")).start();
 
-  try {
-    const txMint = await mockUSD.mint(userWallet.address, amount);
-    const receiptMint = await txMint.wait();
-    spinner.succeed(
-      chalk.green(`✅ Minted USDe! Tx Hash: ${receiptMint.hash}`)
-    );
-  } catch (error) {
-    spinner.fail(
-      chalk.red("❌ Error minting USDe: " + (error as Error).message)
-    );
-    return;
-  }
+  // try {
+  //   const txMint = await USDe.mint(userWallet.address, amount); // Mint USDe instead of mockUSD
+  //   const receiptMint = await txMint.wait();
+  //   spinner.succeed(
+  //     chalk.green(`✅ Minted USDe! Tx Hash: ${receiptMint.hash}`)
+  //   );
+  // } catch (error) {
+  //   spinner.fail(chalk.red("❌ Error minting USDe: " + (error as Error).message));
+  //   console.log(error);
+  //   return;
+  // }
 
   spinner.start(chalk.cyan("Approving USDe..."));
 
   try {
-    const txApprove = await mockUSD.approve(
+    const txApprove = await USDe.approve( // Approve USDe instead of mockUSD
       enaRampServiceManagerAddress,
       amount
     );
