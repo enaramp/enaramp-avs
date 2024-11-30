@@ -1,4 +1,4 @@
-## JACKRAMP AVS Contracts
+## EnaRamp AVS Contracts
 
 This repository is divided into three sections: contracts, mockbank, and operator/AVS.
 
@@ -12,7 +12,7 @@ Mockbank: [README.md](/mockbank/README.md)
 
 ### Deployed Contracts
 
-https://holesky.etherscan.io/address/0xfb3970e6eb88815c485b3531a36d4c8b45db1135
+https://testnet.explorer.ethena.fi/address/0x93AC4279CA7617f806B63E6A2406903281C27Da2
 
 ## 📧 Documentation
 
