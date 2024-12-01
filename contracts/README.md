@@ -1,4 +1,4 @@
-## JACKRAMP AVS Contracts
+## ENARAMP AVS Contracts
 
 ## Usage
 
